@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  backend:
+    image: backend_motion:latest
+    ports:
+      - '8001:8000' # Opens port 8000 on the container's side, sends data to port 8001 on local machine side
+    volumes:
+      - ./motion_backend:/motion_backend
+    command: 'tail -f /dev/null' # To keep running our container (for now)
+    env_file:
+      - ./envs/dev.env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - '5555:5432'
+    env_file:
+      - ./envs/dev.env
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
+volumes:
+  postgres_db:
